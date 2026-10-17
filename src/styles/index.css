@@ -1,0 +1,377 @@
+/* ========================================================
+   Sri Laxmi & Nagesh Royal Telugu Wedding Experience
+   Palette: Rich Velvet Maroon, Warm Ivory, Champagne Gold
+   Featuring Cinematic Sideways Scroll Reveals & 60fps Performance
+   ======================================================== */
+
+:root {
+  /* Rich Jewel-Tone Palette */
+  --color-maroon-950: #1D0206;
+  --color-maroon-900: #2C0409;
+  --color-maroon-800: #420811;
+  --color-maroon-700: #5E0C1A;
+  --color-maroon-600: #7A1224;
+  --color-maroon-500: #9B1B31;
+  --color-maroon-100: #F7E5E8;
+
+  --color-gold-900: #7A5816;
+  --color-gold-800: #997222;
+  --color-gold-700: #B88B2E;
+  --color-gold-600: #D4AF37; /* Metallic Gold */
+  --color-gold-500: #E5C358;
+  --color-gold-400: #F3D97F;
+  --color-gold-300: #F8E7AA;
+  --color-gold-100: #FCF5DE;
+  --color-gold-50:  #FDFBF4;
+
+  --color-ivory-50:  #FFFFFF;
+  --color-ivory-100: #FFFDF9;
+  --color-ivory-200: #FAF5EB;
+  --color-ivory-300: #F4ECE0;
+  --color-ivory-400: #EADBCE;
+
+  --color-text-main:    #2A0E13;
+  --color-text-muted:   #6C454D;
+  --color-text-gold:    #A3771E;
+  --color-text-maroon:  #5E0C1A;
+
+  /* Typography */
+  --font-royal: 'Cinzel', 'Times New Roman', serif;
+  --font-classic: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Garamond, serif;
+  --font-script: 'Great Vibes', cursive;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-telugu: 'Noto Serif Telugu', serif;
+
+  /* Luxurious Gradients */
+  --gradient-gold: linear-gradient(135deg, #F3D97F 0%, #D4AF37 45%, #997222 100%);
+  --gradient-gold-shimmer: linear-gradient(90deg, #D4AF37 0%, #FFF5D0 50%, #D4AF37 100%);
+  --gradient-maroon: linear-gradient(135deg, #7A1224 0%, #5E0C1A 50%, #36050C 100%);
+  --gradient-maroon-soft: linear-gradient(180deg, #420811 0%, #200206 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 253, 249, 0.98) 0%, rgba(250, 245, 235, 0.95) 100%);
+  --gradient-card-dark: linear-gradient(145deg, #38050D 0%, #220206 100%);
+
+  /* Royal Shadows & Glowing Borders */
+  --shadow-sm: 0 4px 12px rgba(66, 8, 17, 0.08);
+  --shadow-md: 0 10px 28px rgba(66, 8, 17, 0.12);
+  --shadow-lg: 0 18px 45px rgba(66, 8, 17, 0.18);
+  --shadow-gold: 0 0 25px rgba(212, 175, 55, 0.35);
+  --shadow-gold-intense: 0 0 35px rgba(212, 175, 55, 0.6);
+  --shadow-royal: 0 24px 64px rgba(44, 4, 9, 0.35);
+
+  --border-gold-subtle: 1px solid rgba(212, 175, 55, 0.4);
+  --border-gold-rich: 1.5px solid rgba(212, 175, 55, 0.85);
+
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-pill: 9999px;
+}
+
+/* Base Reset & Core Setup */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  background-color: var(--color-ivory-200);
+  color: var(--color-text-main);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background: radial-gradient(circle at 50% 10%, #FFFDF9 0%, #FAF5EB 40%, #F4ECE0 100%);
+  background-attachment: fixed;
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* Auspicious Golden Mandala Background Watermark */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(rgba(212, 175, 55, 0.12) 1.2px, transparent 1.2px),
+    radial-gradient(rgba(122, 18, 36, 0.04) 2px, transparent 2px);
+  background-size: 32px 32px, 64px 64px;
+  background-position: 0 0, 16px 16px;
+  opacity: 0.7;
+  z-index: 0;
+}
+
+/* Typography Helpers */
+.font-royal {
+  font-family: var(--font-royal);
+  letter-spacing: 0.04em;
+}
+
+.font-classic {
+  font-family: var(--font-classic);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-script {
+  font-family: var(--font-script);
+}
+
+.font-telugu {
+  font-family: var(--font-telugu);
+}
+
+.text-gold {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Mobile & Desktop Containers */
+.container {
+  width: 100%;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 18px;
+  padding-right: 18px;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+}
+
+/* ========================================================
+   CINEMATIC SCROLL-TRIGGERED SIDEWAYS ENTRANCE ANIMATIONS
+   ======================================================== */
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-65px) scale(0.96);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(65px) scale(0.96);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-up {
+  opacity: 0;
+  transform: translateY(50px) scale(0.96);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+/* Active State Triggered by IntersectionObserver */
+.is-revealed,
+.reveal-left.is-revealed,
+.reveal-right.is-revealed,
+.reveal-up.is-revealed,
+.reveal-scale.is-revealed {
+  opacity: 1 !important;
+  transform: translateX(0) translateY(0) scale(1) !important;
+}
+
+/* Stagger Delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-150 { transition-delay: 150ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+
+@media (max-width: 640px) {
+  .reveal-left {
+    transform: translateX(-38px) scale(0.97);
+  }
+  .reveal-right {
+    transform: translateX(38px) scale(0.97);
+  }
+}
+
+/* ========================================================
+   ROYAL CARD & BORDER STYLES
+   ======================================================== */
+
+.royal-card {
+  background: var(--gradient-card);
+  border: var(--border-gold-rich);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md), var(--shadow-gold);
+  position: relative;
+  overflow: hidden;
+  padding: 30px 22px;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.royal-card::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(212, 175, 55, 0.45);
+  border-radius: calc(var(--radius-lg) - 6px);
+  pointer-events: none;
+}
+
+.royal-card:hover {
+  box-shadow: var(--shadow-lg), var(--shadow-gold-intense);
+  transform: translateY(-2px);
+}
+
+/* Golden Shimmer Sheen */
+.gold-shimmer-border {
+  position: relative;
+}
+
+.gold-shimmer-border::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-25deg);
+  animation: shimmerSweep 4s infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmerSweep {
+  0% { left: -100%; }
+  35%, 100% { left: 150%; }
+}
+
+/* ========================================================
+   ROYAL BUTTONS
+   ======================================================== */
+
+.btn-royal-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--gradient-maroon);
+  color: #FFFDF9;
+  border: 1.5px solid var(--color-gold-400);
+  padding: 14px 26px;
+  font-family: var(--font-royal);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 20px rgba(94, 12, 26, 0.35), var(--shadow-gold);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 48px;
+  touch-action: manipulation;
+}
+
+.btn-royal-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(94, 12, 26, 0.45), var(--shadow-gold-intense);
+  border-color: #FFF;
+}
+
+.btn-royal-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-royal-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255, 253, 249, 0.95);
+  color: var(--color-maroon-700);
+  border: 1.5px solid var(--color-gold-600);
+  padding: 13px 24px;
+  font-family: var(--font-royal);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 48px;
+  touch-action: manipulation;
+}
+
+.btn-royal-secondary:hover {
+  background: #FFFDF9;
+  color: var(--color-maroon-800);
+  border-color: var(--color-gold-700);
+  box-shadow: var(--shadow-md), var(--shadow-gold);
+  transform: translateY(-2px);
+}
+
+.btn-royal-secondary:active {
+  transform: translateY(1px);
+}
+
+/* Animations */
+@keyframes goldPulse {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(212, 175, 55, 0.65);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float {
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
+.animate-gold-pulse {
+  animation: goldPulse 3.5s ease-in-out infinite;
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-left, .reveal-right, .reveal-up, .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
