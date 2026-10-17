@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 export function MusicPlayer({ trackUrl }) {
+  // Hide completely when no audio is configured
+  if (!trackUrl) return null;
+
   const [playing, setPlaying] = useState(false);
   const [hint, setHint] = useState(true);
   const audioRef = useRef(null);

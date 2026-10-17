@@ -70,11 +70,13 @@ export const weddingConfig = {
   },
 
   // Background Audio Configuration
+  // Set trackUrl to your audio file path when ready (e.g. "/audio/my-song.mp3")
+  // Leave empty ("") to hide the music button entirely
   audio: {
-    trackUrl: "/audio/wedding-melody.mp3",
-    trackTitle: "Mangala Vadyam & Nadaswaram Instrumental",
+    trackUrl: "",
+    trackTitle: "Wedding Music",
     trackSubtitle: "Traditional Kalyana Vaibhogam",
-    autoPrompt: true
+    autoPrompt: false
   },
 
   // Pre-Wedding Video Configuration
