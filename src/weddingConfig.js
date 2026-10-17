@@ -62,8 +62,10 @@ export const weddingConfig = {
   },
 
   // Document Assets
+  // Set pdfPath to "/invitation.pdf" once you have the real wedding card PDF
+  // When empty, the Invitation button is hidden automatically
   invitation: {
-    pdfPath: "/invitation.pdf",
+    pdfPath: "",
     fileName: "Sri-Laxmi-Sony-weds-Nagesh-Wedding-Invitation.pdf",
     title: "Official Wedding Patrika",
     subtitle: "Sacred Telugu Marriage Invitation"

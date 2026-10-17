@@ -85,24 +85,6 @@ export function VenueSection({ config }) {
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-
-          {/* Facility highlights */}
-          <div className="facility-grid">
-            {facilities.map((f, i) => (
-              <div key={i} className="facility-item">
-                <span style={{ fontSize: '1.3rem' }}>
-                  {f.icon === 'car' ? '🚗' : f.icon === 'utensils' ? '🍽️' : f.icon === 'shield-check' ? '❄️' : '📍'}
-                </span>
-                <span className="royal" style={{ fontSize: '0.82rem', color: '#3D0209', fontWeight: 700 }}>
-                  {f.label}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <p style={{ fontSize: '0.82rem', color: '#8B6B70', textAlign: 'center', marginTop: '16px', lineHeight: 1.5 }}>
-            💡 {landmarks}
-          </p>
         </div>
 
       </div>

@@ -5,6 +5,7 @@ export function HeroSection({ config, onOpenInvitation, onExploreVenue }) {
   const { bride, groom } = config.couple;
   const { date, muhurtham, lagna, targetDateTime } = config.timing;
   const { name: venueName, shortAddress } = config.venue;
+  const hasPdf = config.invitation?.pdfPath && config.invitation.pdfPath !== '';
 
   // Countdown
   const [time, setTime] = useState({ days: 0, hours: 0, mins: 0, secs: 0, past: false });
@@ -131,12 +132,14 @@ export function HeroSection({ config, onOpenInvitation, onExploreVenue }) {
           >
             📍&nbsp; Explore Wedding Venue
           </button>
-          <button
-            className={`btn-secondary reveal-right delay-1 ${actionsVis ? 'revealed' : ''}`}
-            onClick={onOpenInvitation}
-          >
-            📜&nbsp; View Wedding Invitation
-          </button>
+          {hasPdf && (
+            <button
+              className={`btn-secondary reveal-right delay-1 ${actionsVis ? 'revealed' : ''}`}
+              onClick={onOpenInvitation}
+            >
+              📜&nbsp; View Wedding Invitation
+            </button>
+          )}
         </div>
 
         {/* ── Countdown Timer ── */}
