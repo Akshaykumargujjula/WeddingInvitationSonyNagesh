@@ -1,36 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 
-/**
- * Custom hook to trigger entrance animations when elements enter the viewport.
- * Uses IntersectionObserver for 60fps GPU performance on mobile.
- */
-export function useScrollReveal(options = { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }) {
+export function useReveal(options = {}) {
   const ref = useRef(null);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
+    const el = ref.current;
+    if (!el) return;
 
-    // If IntersectionObserver is not supported, reveal immediately
+    // No IntersectionObserver support — just show everything
     if (!('IntersectionObserver' in window)) {
-      setIsRevealed(true);
+      setVisible(true);
       return;
     }
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsRevealed(true);
-        observer.unobserve(entry.target);
-      }
-    }, options);
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: options.threshold ?? 0.15, rootMargin: options.rootMargin ?? '0px 0px -30px 0px' }
+    );
 
-    observer.observe(element);
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
-    return () => {
-      if (element) observer.unobserve(element);
-    };
-  }, [options.threshold, options.rootMargin]);
-
-  return [ref, isRevealed];
+  return [ref, visible];
 }

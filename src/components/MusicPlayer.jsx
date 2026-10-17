@@ -1,167 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import { audioManager } from '../utils/audioHelper';
-import { PlayIcon, PauseIcon, MusicNoteIcon } from './Icons';
+import React, { useState, useEffect, useRef } from 'react';
 
-export const MusicPlayer = ({ trackUrl, trackTitle = "Auspicious Nadaswaram Melody" }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
+export function MusicPlayer({ trackUrl }) {
+  const [playing, setPlaying] = useState(false);
+  const [hint, setHint] = useState(true);
+  const audioRef = useRef(null);
 
+  // Show hint for first 5 seconds
   useEffect(() => {
-    // Listen to global audio state
-    const unsubscribe = audioManager.subscribe((playing) => {
-      setIsPlaying(playing);
-    });
+    const t = setTimeout(() => setHint(false), 5000);
+    return () => clearTimeout(t);
+  }, []);
 
-    // Show initial subtle hint to encourage music play
-    const timer = setTimeout(() => {
-      setShowTooltip(true);
-      const hideTimer = setTimeout(() => setShowTooltip(false), 5000);
-      return () => clearTimeout(hideTimer);
-    }, 2000);
+  const toggle = async () => {
+    setHint(false);
 
+    if (!audioRef.current) {
+      // Create audio element on first click (respects mobile autoplay policy)
+      const audio = new Audio(trackUrl);
+      audio.loop = true;
+      audio.volume = 0.7;
+      audioRef.current = audio;
+      audio.addEventListener('pause', () => setPlaying(false));
+      audio.addEventListener('play', () => setPlaying(true));
+    }
+
+    const audio = audioRef.current;
+    if (playing) {
+      audio.pause();
+    } else {
+      try {
+        await audio.play();
+      } catch (err) {
+        console.warn('Audio play failed:', err);
+      }
+    }
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
-      unsubscribe();
-      clearTimeout(timer);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, []);
 
-  const handleToggle = () => {
-    audioManager.toggle(trackUrl);
-    setShowTooltip(false);
-  };
-
   return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: '24px',
-        right: '20px',
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px'
-      }}
-    >
-      {/* Interactive Tooltip Hint */}
-      {showTooltip && !isPlaying && (
+    <div style={{ position: 'fixed', bottom: '24px', right: '18px', zIndex: 80, display: 'flex', alignItems: 'center', gap: '10px' }}>
+      {/* Hint tooltip */}
+      {hint && !playing && (
         <div
-          onClick={handleToggle}
+          onClick={toggle}
           style={{
-            background: 'var(--color-maroon-800)',
-            color: 'var(--color-gold-200)',
-            padding: '6px 12px',
-            borderRadius: 'var(--radius-pill)',
-            border: '1px solid var(--color-gold-600)',
-            fontSize: '0.8rem',
-            fontFamily: 'var(--font-serif-royal)',
-            boxShadow: 'var(--shadow-md)',
-            whiteSpace: 'nowrap',
-            cursor: 'pointer',
-            animation: 'gentleFloat 3s ease-in-out infinite'
+            background: '#3D0209', color: '#F5E4B0',
+            padding: '7px 14px', borderRadius: '100px',
+            border: '1px solid #C9A84C',
+            fontSize: '0.8rem', fontFamily: 'var(--font-royal)',
+            cursor: 'pointer', whiteSpace: 'nowrap',
+            boxShadow: '0 4px 16px rgba(43,8,14,0.4)',
+            animation: 'fadeInDown 0.6s ease both'
           }}
         >
-          🎵 Tap for Wedding Music
+          🎵 Tap for Music
         </div>
       )}
 
-      {/* Floating Action Button */}
+      {/* Music FAB button */}
       <button
-        onClick={handleToggle}
-        aria-label={isPlaying ? "Pause Wedding Music" : "Play Wedding Music"}
-        title={isPlaying ? `Pause ${trackTitle}` : `Play ${trackTitle}`}
-        style={{
-          width: '52px',
-          height: '52px',
-          borderRadius: '50%',
-          background: isPlaying ? 'var(--gradient-maroon)' : 'var(--gradient-card)',
-          border: '1.5px solid var(--color-gold-600)',
-          boxShadow: isPlaying ? '0 0 20px rgba(212, 175, 55, 0.55), var(--shadow-royal)' : 'var(--shadow-md)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          color: isPlaying ? 'var(--color-gold-400)' : 'var(--color-maroon-700)',
-          position: 'relative',
-          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          outline: 'none',
-          padding: 0
-        }}
+        onClick={toggle}
+        className={`music-btn ${playing ? 'playing' : ''}`}
+        aria-label={playing ? 'Pause music' : 'Play wedding music'}
+        title={playing ? 'Pause Music' : 'Play Wedding Music'}
       >
-        {/* Equalizer animation when playing */}
-        {isPlaying ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '3px', height: '18px' }}>
-            <span
-              style={{
-                width: '3px',
-                height: '14px',
-                background: 'var(--color-gold-400)',
-                borderRadius: '2px',
-                animation: 'eqBar1 0.8s ease-in-out infinite alternate'
-              }}
-            />
-            <span
-              style={{
-                width: '3px',
-                height: '18px',
-                background: 'var(--color-gold-400)',
-                borderRadius: '2px',
-                animation: 'eqBar2 0.6s ease-in-out infinite alternate'
-              }}
-            />
-            <span
-              style={{
-                width: '3px',
-                height: '10px',
-                background: 'var(--color-gold-400)',
-                borderRadius: '2px',
-                animation: 'eqBar3 0.7s ease-in-out infinite alternate'
-              }}
-            />
+        {playing ? (
+          // Animated equalizer bars
+          <div style={{ display: 'flex', alignItems: 'center', gap: '3px', height: '20px' }}>
+            {[14, 20, 11, 17].map((h, i) => (
+              <span key={i} style={{
+                width: '3px', borderRadius: '2px',
+                background: '#E8CB7A',
+                animation: `eqBar${i % 3 + 1} ${0.5 + i * 0.1}s ease-in-out infinite alternate`,
+                height: `${h}px`
+              }} />
+            ))}
           </div>
         ) : (
-          <MusicNoteIcon className="w-6 h-6" color="var(--color-maroon-700)" />
+          <span style={{ fontSize: '1.35rem' }}>🎵</span>
         )}
 
-        {/* Small play/pause badge icon in bottom right */}
-        <span
-          style={{
-            position: 'absolute',
-            bottom: '-2px',
-            right: '-2px',
-            width: '20px',
-            height: '20px',
-            borderRadius: '50%',
-            background: 'var(--color-maroon-900)',
-            border: '1px solid var(--color-gold-500)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--color-gold-400)'
-          }}
-        >
-          {isPlaying ? (
-            <PauseIcon className="w-2.5 h-2.5" color="var(--color-gold-400)" />
-          ) : (
-            <PlayIcon className="w-2.5 h-2.5" color="var(--color-gold-400)" />
-          )}
+        {/* Play/Pause badge */}
+        <span style={{
+          position: 'absolute', bottom: '-2px', right: '-2px',
+          width: '20px', height: '20px', borderRadius: '50%',
+          background: '#200105', border: '1px solid #C9A84C',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '0.6rem', color: '#E8CB7A'
+        }}>
+          {playing ? '⏸' : '▶'}
         </span>
       </button>
 
-      {/* Mini Equalizer Keyframe Styles */}
       <style>{`
-        @keyframes eqBar1 {
-          0% { height: 6px; }
-          100% { height: 16px; }
-        }
-        @keyframes eqBar2 {
-          0% { height: 18px; }
-          100% { height: 8px; }
-        }
-        @keyframes eqBar3 {
-          0% { height: 8px; }
-          100% { height: 15px; }
-        }
+        @keyframes eqBar1 { 0%{height:6px} 100%{height:18px} }
+        @keyframes eqBar2 { 0%{height:20px} 100%{height:8px} }
+        @keyframes eqBar3 { 0%{height:10px} 100%{height:16px} }
       `}</style>
     </div>
   );
-};
+}

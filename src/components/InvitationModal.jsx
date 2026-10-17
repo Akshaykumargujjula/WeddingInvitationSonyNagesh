@@ -1,406 +1,278 @@
 import React, { useEffect } from 'react';
-import {
-  CloseIcon,
-  DownloadIcon,
-  ExternalLinkIcon,
-  GaneshaMotif,
-  KalashMotif,
-  OrnamentalDivider,
-  ArrowLeftIcon,
-  CalendarIcon,
-  ClockIcon,
-  MapPinIcon
-} from './Icons';
 
-export const InvitationModal = ({ isOpen, onClose, config }) => {
-  // Prevent body scroll when modal is active
+export function InvitationModal({ isOpen, onClose, config }) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
   if (!isOpen) return null;
 
+  const { bride, groom, monogram } = config.couple;
+  const { date, muhurtham, lagna, teluguDate } = config.timing;
+  const { name: venue, address } = config.venue;
+
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Wedding Invitation Modal"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 90,
-        background: 'rgba(30, 4, 8, 0.88)',
-        backdropFilter: 'blur(10px)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        overflowY: 'auto',
-        padding: '16px 12px 32px'
-      }}
-    >
-      {/* Sticky Top Header Bar with Back-to-Home Action */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '680px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '12px 16px',
-          background: 'rgba(255, 253, 249, 0.96)',
-          borderRadius: 'var(--radius-pill)',
-          border: '1.5px solid var(--color-gold-500)',
-          boxShadow: 'var(--shadow-royal)',
-          marginBottom: '16px',
-          position: 'sticky',
-          top: '12px',
-          zIndex: 10
-        }}
-      >
-        {/* Back to Home Button */}
-        <button
-          onClick={onClose}
-          className="btn-royal-secondary"
-          style={{
-            padding: '8px 16px',
-            fontSize: '0.82rem',
-            minHeight: '36px',
-            gap: '6px'
-          }}
-          aria-label="Back to Wedding Home"
-        >
-          <ArrowLeftIcon className="w-4 h-4" color="var(--color-maroon-700)" />
-          Back to Home
-        </button>
+    <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
 
-        <span
-          className="font-royal"
-          style={{
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            color: 'var(--color-maroon-800)',
-            letterSpacing: '0.04em'
-          }}
-        >
-          Official Patrika
+      {/* Sticky top bar */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        width: '100%', maxWidth: '640px', margin: '0 auto 20px',
+        background: 'rgba(253,248,240,0.97)', backdropFilter: 'blur(12px)',
+        border: '1.5px solid #C9A84C', borderRadius: '100px',
+        padding: '10px 16px', position: 'sticky', top: '8px', zIndex: 10,
+        boxShadow: '0 8px 40px rgba(43,8,14,0.4)'
+      }}>
+        <button onClick={onClose} style={{
+          display: 'flex', alignItems: 'center', gap: '6px',
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontFamily: 'var(--font-royal)', fontSize: '0.82rem',
+          fontWeight: 700, color: '#6B0F1A', letterSpacing: '0.06em'
+        }}>
+          ← Back
+        </button>
+        <span className="royal" style={{ fontSize: '0.82rem', fontWeight: 700, color: '#3D0209' }}>
+          💌 Wedding Patrika
         </span>
-
-        {/* Close Icon Button */}
-        <button
-          onClick={onClose}
-          aria-label="Close Invitation Modal"
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--color-maroon-800)',
-            cursor: 'pointer',
-            padding: '6px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <CloseIcon className="w-6 h-6" color="var(--color-maroon-800)" />
-        </button>
+        <button onClick={onClose} style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontSize: '1.5rem', color: '#6B0F1A', lineHeight: 1, padding: '2px 6px'
+        }}>✕</button>
       </div>
 
-      {/* Main Invitation Document Container */}
-      <div
-        className="royal-card"
-        style={{
-          width: '100%',
-          maxWidth: '680px',
-          background: '#FFFDF9',
-          border: '2px solid var(--color-gold-600)',
-          borderRadius: '24px',
-          padding: '36px 20px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)',
-          textAlign: 'center',
-          position: 'relative'
-        }}
-      >
-        {/* Sacred Header */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <GaneshaMotif className="w-14 h-14" color="var(--color-maroon-700)" />
-          <p
-            className="font-telugu"
-            style={{
-              fontSize: '0.95rem',
-              color: 'var(--color-gold-900)',
-              fontWeight: 600,
-              marginTop: '8px',
-              letterSpacing: '0.04em'
-            }}
-          >
-            శ్రీరస్తు • శుభమస్తు • అవిఘ్నమస్తు
-          </p>
+      {/* Main Invitation Card */}
+      <div style={{
+        width: '100%', maxWidth: '600px', margin: '0 auto',
+        background: 'linear-gradient(165deg, #FFFDF8 0%, #FAF1DC 60%, #F3E3C0 100%)',
+        border: '2.5px solid #C9A84C',
+        borderRadius: '28px',
+        padding: '44px 28px 36px',
+        textAlign: 'center',
+        boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+
+        {/* Inner decorative border */}
+        <div style={{
+          position: 'absolute', inset: '10px',
+          border: '1px dashed rgba(201,168,76,0.5)',
+          borderRadius: '20px', pointerEvents: 'none'
+        }} />
+
+        {/* Gold shimmer */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(ellipse at 30% 0%, rgba(201,168,76,0.08) 0%, transparent 60%)',
+          pointerEvents: 'none'
+        }} />
+
+        {/* Corner florals */}
+        {['🌸', '🌸', '🌸', '🌸'].map((f, i) => (
+          <span key={i} style={{
+            position: 'absolute', fontSize: '1.6rem', opacity: 0.2, lineHeight: 1,
+            top: i < 2 ? '16px' : 'auto',
+            bottom: i >= 2 ? '16px' : 'auto',
+            left: i % 2 === 0 ? '16px' : 'auto',
+            right: i % 2 === 1 ? '16px' : 'auto',
+            transform: i === 1 ? 'scaleX(-1)' : i === 2 ? 'scaleY(-1)' : i === 3 ? 'scale(-1)' : 'none',
+            pointerEvents: 'none'
+          }}>{f}</span>
+        ))}
+
+        {/* ── INVOCATION ── */}
+        <p className="telugu" style={{
+          fontSize: '0.92rem', color: '#9A6B20', fontWeight: 700,
+          letterSpacing: '0.03em', marginBottom: '20px', position: 'relative'
+        }}>
+          || శ్రీరస్తు • శుభమస్తు • అవిఘ్నమస్తు ||
+        </p>
+
+        {/* Monogram */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+          <div style={{
+            width: '72px', height: '72px', borderRadius: '50%',
+            background: 'linear-gradient(135deg, #6B0F1A, #3D0209)',
+            border: '2.5px solid #C9A84C',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 0 32px rgba(201,168,76,0.4), 0 8px 24px rgba(43,8,14,0.4)',
+            fontFamily: 'var(--font-royal)', fontWeight: 700,
+            fontSize: '1rem', color: '#F5E4B0', letterSpacing: '0.05em'
+          }}>
+            {monogram}
+          </div>
         </div>
 
-        <div style={{ margin: '14px 0 18px' }}>
-          <OrnamentalDivider className="w-48 h-6" color="var(--color-gold-500)" />
-        </div>
-
-        <p
-          className="font-royal"
-          style={{
-            fontSize: '0.82rem',
-            color: 'var(--color-maroon-600)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            fontWeight: 700
-          }}
-        >
+        <p className="royal" style={{
+          fontSize: '0.7rem', letterSpacing: '0.22em', color: '#A07830',
+          textTransform: 'uppercase', marginBottom: '28px'
+        }}>
           Kalyana Mahotsava Patrika
         </p>
 
-        {/* Couple Names */}
-        <div style={{ margin: '20px 0' }}>
-          <p
-            className="font-telugu"
-            style={{
-              fontSize: '0.9rem',
-              color: 'var(--color-gold-900)',
-              fontWeight: 600,
-              marginBottom: '4px'
-            }}
-          >
-            {config.couple.bride.teluguName}
-          </p>
-          <h2
-            className="font-royal"
-            style={{
-              fontSize: 'clamp(1.8rem, 6vw, 2.4rem)',
-              color: 'var(--color-maroon-800)',
-              fontWeight: 700,
-              lineHeight: 1.2
-            }}
-          >
-            {config.couple.bride.firstName}
-          </h2>
+        {/* Gold line */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, #C9A84C, transparent)',
+          marginBottom: '28px'
+        }} />
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '12px',
-              margin: '10px 0'
-            }}
-          >
-            <span style={{ width: '40px', height: '1px', background: 'var(--color-gold-500)' }} />
-            <span className="font-script" style={{ fontSize: '2rem', color: 'var(--color-gold-700)' }}>
-              weds
-            </span>
-            <span style={{ width: '40px', height: '1px', background: 'var(--color-gold-500)' }} />
+        {/* ── COUPLE NAMES ── */}
+        <div style={{ marginBottom: '28px' }}>
+          <p className="telugu" style={{
+            fontSize: '0.9rem', color: '#7A1224', fontWeight: 600, marginBottom: '4px'
+          }}>
+            {bride.teluguName}
+          </p>
+          <h2 style={{
+            fontFamily: 'var(--font-royal)',
+            fontSize: 'clamp(1.9rem, 7vw, 2.6rem)',
+            color: '#200105', fontWeight: 800, lineHeight: 1.05,
+            letterSpacing: '0.02em'
+          }}>
+            {bride.firstName}
+          </h2>
+          <p style={{
+            fontFamily: 'var(--font-script)',
+            fontSize: 'clamp(1.3rem, 5vw, 1.7rem)',
+            color: '#A07830', marginTop: '2px'
+          }}>
+            ({bride.nickname})
+          </p>
+
+          <div style={{
+            display: 'flex', alignItems: 'center',
+            justifyContent: 'center', gap: '14px', margin: '18px 0'
+          }}>
+            <span style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, #C9A84C)' }} />
+            <span style={{
+              fontFamily: 'var(--font-script)', fontSize: '2.4rem', color: '#A07830', lineHeight: 1
+            }}>weds</span>
+            <span style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, #C9A84C, transparent)' }} />
           </div>
 
-          <p
-            className="font-telugu"
-            style={{
-              fontSize: '0.9rem',
-              color: 'var(--color-gold-900)',
-              fontWeight: 600,
-              marginBottom: '4px'
-            }}
-          >
-            {config.couple.groom.teluguName}
+          <p className="telugu" style={{
+            fontSize: '0.9rem', color: '#7A1224', fontWeight: 600, marginBottom: '4px'
+          }}>
+            {groom.teluguName}
           </p>
-          <h2
-            className="font-royal"
-            style={{
-              fontSize: 'clamp(1.8rem, 6vw, 2.4rem)',
-              color: 'var(--color-maroon-800)',
-              fontWeight: 700,
-              lineHeight: 1.2
-            }}
-          >
-            {config.couple.groom.firstName}
+          <h2 style={{
+            fontFamily: 'var(--font-royal)',
+            fontSize: 'clamp(1.9rem, 7vw, 2.6rem)',
+            color: '#200105', fontWeight: 800, lineHeight: 1.05,
+            letterSpacing: '0.02em'
+          }}>
+            {groom.firstName}
           </h2>
         </div>
 
-        {/* Auspicious Muhurtham & Venue Details Box */}
-        <div
-          style={{
-            background: 'var(--color-gold-50)',
-            border: '1.5px solid var(--color-gold-400)',
-            borderRadius: 'var(--radius-md)',
-            padding: '20px 16px',
-            margin: '24px 0',
-            textAlign: 'center'
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
-            <KalashMotif className="w-8 h-8" color="var(--color-gold-700)" />
-          </div>
+        {/* Gold line */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, #C9A84C, transparent)',
+          marginBottom: '28px'
+        }} />
 
-          <h3
-            className="font-royal"
-            style={{
-              fontSize: '1.2rem',
-              color: 'var(--color-maroon-800)',
-              fontWeight: 700,
-              marginBottom: '6px'
-            }}
-          >
-            {config.timing.date}
+        {/* ── DATE & TIME BOX ── */}
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(245,228,176,0.6), rgba(201,168,76,0.15))',
+          border: '1.5px solid rgba(201,168,76,0.6)',
+          borderRadius: '18px', padding: '22px 20px',
+          marginBottom: '20px'
+        }}>
+          <p className="telugu" style={{
+            fontSize: '0.92rem', color: '#7A1224', fontWeight: 700, marginBottom: '6px'
+          }}>
+            {teluguDate}
+          </p>
+          <h3 className="royal" style={{
+            fontSize: 'clamp(1.15rem, 4vw, 1.45rem)',
+            color: '#200105', fontWeight: 800, marginBottom: '10px'
+          }}>
+            {date}
           </h3>
-
-          <p
-            className="font-body"
-            style={{
-              fontSize: '1.15rem',
-              color: 'var(--color-maroon-700)',
-              fontWeight: 700
-            }}
-          >
-            Subha Muhurtham: {config.timing.muhurtham}
+          <div style={{
+            display: 'inline-block',
+            background: 'linear-gradient(135deg, #6B0F1A, #3D0209)',
+            color: '#F5E4B0', padding: '10px 24px',
+            borderRadius: '100px', border: '1.5px solid #C9A84C',
+            fontFamily: 'var(--font-royal)', fontWeight: 700,
+            fontSize: '1rem', letterSpacing: '0.04em',
+            boxShadow: '0 4px 20px rgba(107,15,26,0.4)'
+          }}>
+            ⏰ Muhurtham: {muhurtham}
+          </div>
+          <p className="telugu" style={{
+            fontSize: '1rem', color: '#9A6B20', fontWeight: 700, marginTop: '10px'
+          }}>
+            ధనుర్ లగ్న సుముహూర్తమున
           </p>
+          <p style={{ fontSize: '0.88rem', color: '#5C3840', marginTop: '2px' }}>({lagna})</p>
+        </div>
 
-          <p
-            className="font-telugu"
-            style={{
-              fontSize: '1rem',
-              color: 'var(--color-gold-900)',
-              fontWeight: 600,
-              marginTop: '4px'
-            }}
-          >
-            {config.timing.teluguLagna} ({config.timing.lagna})
+        {/* ── VENUE BOX ── */}
+        <div style={{
+          background: 'rgba(253,248,240,0.7)',
+          border: '1px solid rgba(201,168,76,0.5)',
+          borderRadius: '16px', padding: '18px 20px',
+          marginBottom: '32px'
+        }}>
+          <p className="royal" style={{
+            fontSize: '0.68rem', letterSpacing: '0.2em',
+            color: '#A07830', textTransform: 'uppercase', marginBottom: '6px'
+          }}>
+            📍 Venue
           </p>
-
-          <div
-            style={{
-              width: '80%',
-              height: '1px',
-              background: 'rgba(212, 175, 55, 0.35)',
-              margin: '14px auto'
-            }}
-          />
-
-          <h4
-            className="font-royal"
-            style={{
-              fontSize: '1.1rem',
-              color: 'var(--color-maroon-800)',
-              fontWeight: 700
-            }}
-          >
-            {config.venue.name}
+          <p className="telugu" style={{
+            fontSize: '1rem', color: '#A07830', fontWeight: 700, marginBottom: '4px'
+          }}>
+            శ్రీ రామ గార్డెన్స్
+          </p>
+          <h4 className="royal" style={{
+            fontSize: '1.15rem', color: '#200105', fontWeight: 800
+          }}>
+            {venue}
           </h4>
-          <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginTop: '2px' }}>
-            {config.venue.address}
+          <p style={{
+            fontSize: '0.9rem', color: '#5C3840', marginTop: '4px', lineHeight: 1.5
+          }}>
+            {address}
           </p>
         </div>
 
-        {/* Dedicated PDF Actions (Required: Open Full Invitation without login) */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            maxWidth: '420px',
-            margin: '0 auto 24px'
-          }}
-        >
-          {/* Prominent Open Full Invitation Button */}
+        {/* ── BUTTONS ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <a
             href={config.invitation.pdfPath}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-royal-primary"
-            style={{
-              padding: '14px 24px',
-              fontSize: '0.95rem'
-            }}
-            aria-label="Open Full Invitation PDF in a new tab"
+            className="btn-primary"
+            style={{ display: 'flex' }}
           >
-            <ExternalLinkIcon className="w-5 h-5" color="var(--color-gold-300)" />
-            Open Full Invitation (PDF)
+            📄 &nbsp;Open Full Invitation PDF
           </a>
-
-          {/* Download PDF Button */}
           <a
             href={config.invitation.pdfPath}
             download={config.invitation.fileName}
-            className="btn-royal-secondary"
-            style={{
-              padding: '12px 20px',
-              fontSize: '0.9rem'
-            }}
-            aria-label="Download Wedding Invitation PDF"
+            className="btn-secondary"
+            style={{ display: 'flex' }}
           >
-            <DownloadIcon className="w-5 h-5" color="var(--color-gold-800)" />
-            Download Invitation PDF
+            ⬇️ &nbsp;Download Invitation
           </a>
-        </div>
-
-        {/* Embedded PDF Viewer on larger screens / Fallback on mobile */}
-        <div
-          style={{
-            marginTop: '20px',
-            borderRadius: 'var(--radius-md)',
-            border: '1.5px solid var(--color-gold-400)',
-            overflow: 'hidden',
-            background: '#F0ECE1',
-            minHeight: '260px'
-          }}
-        >
-          <object
-            data={`${config.invitation.pdfPath}#toolbar=0&navpanes=0`}
-            type="application/pdf"
-            width="100%"
-            height="380px"
-            style={{ display: 'block', border: 'none' }}
-          >
-            <div
-              style={{
-                padding: '40px 20px',
-                textAlign: 'center',
-                color: 'var(--color-text-secondary)'
-              }}
-            >
-              <KalashMotif className="w-10 h-10" color="var(--color-gold-700)" />
-              <p
-                className="font-royal"
-                style={{
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  marginTop: '12px',
-                  color: 'var(--color-maroon-800)'
-                }}
-              >
-                Wedding Patrika Document Ready
-              </p>
-              <p style={{ fontSize: '0.85rem', marginTop: '6px' }}>
-                Tap above to view or download the high-resolution invitation PDF directly.
-              </p>
-            </div>
-          </object>
-        </div>
-
-        {/* Bottom Back To Home Action */}
-        <div style={{ marginTop: '28px' }}>
-          <button
-            onClick={onClose}
-            className="btn-royal-secondary"
-            style={{
-              padding: '10px 24px',
-              fontSize: '0.88rem'
-            }}
-          >
-            <ArrowLeftIcon className="w-4 h-4" color="var(--color-maroon-700)" />
-            Return to Wedding Page
+          <button className="btn-secondary" onClick={onClose}>
+            ← Return to Wedding Page
           </button>
         </div>
+
+        {/* Bottom Telugu blessing */}
+        <p className="telugu" style={{
+          marginTop: '28px', fontSize: '0.82rem',
+          color: '#A07830', opacity: 0.8, lineHeight: 1.6
+        }}>
+          మీ రాక మాకు మరింత ఆనందాన్ని ఇస్తుంది 🙏
+        </p>
       </div>
     </div>
   );
-};
+}

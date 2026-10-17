@@ -1,409 +1,168 @@
 import React, { useState, useEffect } from 'react';
-import {
-  GaneshaMotif,
-  KalashMotif,
-  MandalaCorner,
-  OrnamentalDivider,
-  MapPinIcon,
-  CalendarIcon,
-  ClockIcon
-} from './Icons';
-import { useScrollReveal } from '../utils/useScrollReveal';
+import { useReveal } from '../utils/useScrollReveal';
 
-export const HeroSection = ({ config, onOpenInvitation, onExploreVenue }) => {
-  // Countdown Timer
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [isPast, setIsPast] = useState(false);
+export function HeroSection({ config, onOpenInvitation, onExploreVenue }) {
+  const { bride, groom } = config.couple;
+  const { date, muhurtham, lagna, targetDateTime } = config.timing;
+  const { name: venueName, shortAddress } = config.venue;
 
-  // Scroll animations for different elements
-  const [heroCardRef, heroCardRevealed] = useScrollReveal({ threshold: 0.1 });
-  const [actionsRef, actionsRevealed] = useScrollReveal({ threshold: 0.1 });
-  const [countdownRef, countdownRevealed] = useScrollReveal({ threshold: 0.1 });
+  // Countdown
+  const [time, setTime] = useState({ days: 0, hours: 0, mins: 0, secs: 0, past: false });
 
   useEffect(() => {
-    const targetDate = new Date(config.timing.targetDateTime).getTime();
-
-    const updateCountdown = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference <= 0) {
-        setIsPast(true);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      } else {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        setTimeLeft({ days, hours, minutes, seconds });
+    const target = new Date(targetDateTime).getTime();
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        setTime({ days: 0, hours: 0, mins: 0, secs: 0, past: true });
+        return;
       }
+      setTime({
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        mins: Math.floor((diff % 3600000) / 60000),
+        secs: Math.floor((diff % 60000) / 1000),
+        past: false,
+      });
     };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [targetDateTime]);
 
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [config.timing.targetDateTime]);
+  // Scroll reveals
+  const [headerRef, headerVis] = useReveal();
+  const [namesRef, namesVis] = useReveal();
+  const [infoRef, infoVis] = useReveal();
+  const [actionsRef, actionsVis] = useReveal();
+  const [countdownRef, countdownVis] = useReveal();
 
   return (
-    <section
-      id="home"
-      style={{
-        paddingTop: '88px',
-        paddingBottom: '48px',
-        position: 'relative',
-        textAlign: 'center'
-      }}
-    >
-      <div className="container">
-        {/* Main Royal Card with Sideways Reveal */}
+    <section style={{ paddingTop: '80px', paddingBottom: '56px' }}>
+      <div className="wrap">
+
+        {/* ── Header Tag ── */}
         <div
-          ref={heroCardRef}
-          className={`royal-card gold-shimmer-border reveal-scale ${heroCardRevealed ? 'is-revealed' : ''}`}
+          ref={headerRef}
+          className={`reveal ${headerVis ? 'revealed' : ''}`}
+          style={{ textAlign: 'center', marginBottom: '28px' }}
+        >
+          <p className="telugu" style={{ color: '#A07830', fontWeight: 700, fontSize: '0.92rem', marginBottom: '6px' }}>
+            || శ్రీరస్తు • శుభమస్తు • అవిఘ్నమస్తు ||
+          </p>
+          <p className="royal" style={{
+            fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: '#8B6B70', marginTop: '4px'
+          }}>
+            Together with our families, we joyfully invite you to celebrate the wedding of
+          </p>
+        </div>
+
+        {/* ── Main Card ── */}
+        <div
+          ref={namesRef}
+          className={`card reveal ${namesVis ? 'revealed' : ''}`}
+          style={{ textAlign: 'center', marginBottom: '24px', padding: '36px 24px' }}
+        >
+          {/* Bride */}
+          <p className={`telugu delay-1 reveal ${namesVis ? 'revealed' : ''}`}
+            style={{ fontSize: '0.9rem', color: '#7A1224', fontWeight: 600, marginBottom: '2px' }}>
+            {bride.teluguName}
+          </p>
+          <h2 className={`royal delay-1 reveal ${namesVis ? 'revealed' : ''}`}
+            style={{ fontSize: 'clamp(2rem, 7vw, 2.8rem)', color: '#3D0209', fontWeight: 700, lineHeight: 1.1 }}>
+            {bride.firstName}
+            <span className="script" style={{ fontSize: 'clamp(1.3rem, 4.5vw, 1.8rem)', color: '#A07830', marginLeft: '8px' }}>
+              ({bride.nickname})
+            </span>
+          </h2>
+
+          {/* weds */}
+          <div className={`delay-2 reveal ${namesVis ? 'revealed' : ''}`}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px', margin: '14px 0' }}>
+            <span style={{ flex: 1, height: '1.5px', background: 'linear-gradient(90deg, transparent, #C9A84C)' }} />
+            <span className="script" style={{ fontSize: '2.4rem', color: '#A07830' }}>weds</span>
+            <span style={{ flex: 1, height: '1.5px', background: 'linear-gradient(90deg, #C9A84C, transparent)' }} />
+          </div>
+
+          {/* Groom */}
+          <p className={`telugu delay-3 reveal ${namesVis ? 'revealed' : ''}`}
+            style={{ fontSize: '0.9rem', color: '#7A1224', fontWeight: 600, marginBottom: '2px' }}>
+            {groom.teluguName}
+          </p>
+          <h2 className={`royal delay-3 reveal ${namesVis ? 'revealed' : ''}`}
+            style={{ fontSize: 'clamp(2rem, 7vw, 2.8rem)', color: '#3D0209', fontWeight: 700, lineHeight: 1.1 }}>
+            {groom.firstName}
+          </h2>
+        </div>
+
+        {/* ── Date & Venue Info Strip ── */}
+        <div
+          ref={infoRef}
+          className={`reveal-left ${infoVis ? 'revealed' : ''}`}
           style={{
-            padding: '40px 22px',
-            position: 'relative',
-            background: 'var(--gradient-card)',
-            border: '2px solid var(--color-gold-600)',
-            boxShadow: 'var(--shadow-lg), var(--shadow-gold)'
+            background: 'linear-gradient(135deg, rgba(245,228,176,0.35), rgba(255,255,255,0.9))',
+            border: '1.5px solid #C9A84C',
+            borderRadius: '16px',
+            padding: '18px 20px',
+            marginBottom: '24px',
+            textAlign: 'center'
           }}
         >
-          {/* Ornamental Mandala Corners */}
-          <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
-            <MandalaCorner className="w-10 h-10" color="var(--color-gold-600)" rotate={0} />
-          </div>
-          <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-            <MandalaCorner className="w-10 h-10" color="var(--color-gold-600)" rotate={90} />
-          </div>
-          <div style={{ position: 'absolute', bottom: '10px', right: '10px' }}>
-            <MandalaCorner className="w-10 h-10" color="var(--color-gold-600)" rotate={180} />
-          </div>
-          <div style={{ position: 'absolute', bottom: '10px', left: '10px' }}>
-            <MandalaCorner className="w-10 h-10" color="var(--color-gold-600)" rotate={270} />
-          </div>
-
-          {/* Auspicious Shloka & Lord Ganesha Lineage */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                background: 'rgba(212, 175, 55, 0.12)',
-                border: '1.5px solid var(--color-gold-500)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-            >
-              <GaneshaMotif className="w-10 h-10" color="var(--color-maroon-700)" />
-            </div>
-
-            <p
-              className="font-telugu"
-              style={{
-                fontSize: '0.92rem',
-                color: 'var(--color-gold-900)',
-                fontWeight: 700,
-                marginTop: '10px',
-                letterSpacing: '0.04em'
-              }}
-            >
-              || శ్రీరస్తు • శుభమస్తు • అవిఘ్నమస్తు ||
-            </p>
-          </div>
-
-          <div style={{ margin: '14px 0 8px' }}>
-            <OrnamentalDivider className="w-48 h-6" color="var(--color-gold-600)" />
-          </div>
-
-          <p
-            className="font-royal"
-            style={{
-              fontSize: '0.82rem',
-              color: 'var(--color-text-muted)',
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              fontWeight: 700,
-              marginTop: '4px'
-            }}
-          >
-            We Cordially Solicit Your Gracious Presence At The Marriage Of
+          <p className="royal" style={{ fontSize: '1.05rem', color: '#3D0209', fontWeight: 700 }}>
+            📅 {date}
           </p>
+          <p className="body-serif" style={{ fontSize: '1.12rem', color: '#6B0F1A', fontWeight: 600, marginTop: '4px' }}>
+            ⏰ Muhurtham: {muhurtham} &nbsp;·&nbsp; {lagna}
+          </p>
+          <p style={{ fontSize: '0.9rem', color: '#7A7266', marginTop: '6px' }}>
+            📍 {venueName}, {shortAddress}
+          </p>
+        </div>
 
-          {/* Couple Names Section with Alternating Sideways Visual Flourish */}
-          <div style={{ margin: '26px 0 20px' }}>
-            {/* Bride */}
-            <div style={{ marginBottom: '6px' }}>
-              <p
-                className="font-telugu"
-                style={{
-                  fontSize: '0.95rem',
-                  color: 'var(--color-maroon-600)',
-                  fontWeight: 600,
-                  marginBottom: '2px'
-                }}
-              >
-                {config.couple.bride.teluguName}
-              </p>
-              <h2
-                className="font-royal"
-                style={{
-                  fontSize: 'clamp(2rem, 7.5vw, 2.85rem)',
-                  fontWeight: 700,
-                  color: 'var(--color-maroon-800)',
-                  letterSpacing: '0.04em',
-                  lineHeight: 1.15
-                }}
-              >
-                {config.couple.bride.firstName}
-                <span
-                  style={{
-                    fontSize: 'clamp(1.2rem, 4.5vw, 1.6rem)',
-                    color: 'var(--color-gold-700)',
-                    fontFamily: 'var(--font-script)',
-                    marginLeft: '8px'
-                  }}
-                >
-                  ({config.couple.bride.nickname})
-                </span>
-              </h2>
-            </div>
-
-            {/* weds */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '16px',
-                margin: '12px 0'
-              }}
-            >
-              <span style={{ width: '48px', height: '1.5px', background: 'var(--color-gold-600)' }} />
-              <span
-                className="font-script"
-                style={{
-                  fontSize: '2.4rem',
-                  color: 'var(--color-gold-700)',
-                  lineHeight: 1
-                }}
-              >
-                weds
-              </span>
-              <span style={{ width: '48px', height: '1.5px', background: 'var(--color-gold-600)' }} />
-            </div>
-
-            {/* Groom */}
-            <div>
-              <p
-                className="font-telugu"
-                style={{
-                  fontSize: '0.95rem',
-                  color: 'var(--color-maroon-600)',
-                  fontWeight: 600,
-                  marginBottom: '2px'
-                }}
-              >
-                {config.couple.groom.teluguName}
-              </p>
-              <h2
-                className="font-royal"
-                style={{
-                  fontSize: 'clamp(2rem, 7.5vw, 2.85rem)',
-                  fontWeight: 700,
-                  color: 'var(--color-maroon-800)',
-                  letterSpacing: '0.04em',
-                  lineHeight: 1.15
-                }}
-              >
-                {config.couple.groom.firstName}
-              </h2>
-            </div>
-          </div>
-
-          {/* Auspicious Muhurtham & Venue Badge */}
-          <div
-            style={{
-              background: 'linear-gradient(135deg, rgba(253, 251, 244, 0.98), rgba(247, 231, 180, 0.5))',
-              border: '1.5px solid var(--color-gold-600)',
-              borderRadius: 'var(--radius-md)',
-              padding: '18px 16px',
-              margin: '22px auto 28px',
-              maxWidth: '480px',
-              boxShadow: 'var(--shadow-sm)'
-            }}
+        {/* ── Two Prominent Action Buttons ── */}
+        <div
+          ref={actionsRef}
+          style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px' }}
+        >
+          <button
+            className={`btn-primary reveal-left ${actionsVis ? 'revealed' : ''}`}
+            onClick={onExploreVenue}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                color: 'var(--color-maroon-800)',
-                marginBottom: '6px'
-              }}
-            >
-              <CalendarIcon className="w-5 h-5" color="var(--color-gold-800)" />
-              <span
-                className="font-royal"
-                style={{
-                  fontSize: '1.05rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.02em'
-                }}
-              >
-                {config.timing.date}
-              </span>
-            </div>
-
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                color: 'var(--color-maroon-700)',
-                fontSize: '1.1rem'
-              }}
-            >
-              <ClockIcon className="w-5 h-5" color="var(--color-gold-800)" />
-              <span className="font-body" style={{ fontWeight: 700 }}>
-                Muhurtham: {config.timing.muhurtham} ({config.timing.lagna})
-              </span>
-            </div>
-
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                color: 'var(--color-text-muted)',
-                fontSize: '0.88rem',
-                marginTop: '8px'
-              }}
-            >
-              <MapPinIcon className="w-4 h-4" color="var(--color-gold-800)" />
-              <span>{config.venue.name}, {config.venue.shortAddress}</span>
-            </div>
-          </div>
-
-          {/* Two Prominent Actions (Coming from Left and Right) */}
-          <div
-            ref={actionsRef}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '14px',
-              maxWidth: '420px',
-              margin: '0 auto'
-            }}
+            📍&nbsp; Explore Wedding Venue
+          </button>
+          <button
+            className={`btn-secondary reveal-right delay-1 ${actionsVis ? 'revealed' : ''}`}
+            onClick={onOpenInvitation}
           >
-            {/* Button 1: Slides in from the LEFT */}
-            <div className={`reveal-left ${actionsRevealed ? 'is-revealed' : ''}`}>
-              <button
-                onClick={onExploreVenue}
-                className="btn-royal-primary"
-                style={{ width: '100%' }}
-                aria-label="Explore Wedding Venue"
-              >
-                <MapPinIcon className="w-5 h-5" color="var(--color-gold-300)" />
-                Explore Wedding Venue
-              </button>
-            </div>
+            📜&nbsp; View Wedding Invitation
+          </button>
+        </div>
 
-            {/* Button 2: Slides in from the RIGHT */}
-            <div className={`reveal-right delay-150 ${actionsRevealed ? 'is-revealed' : ''}`}>
-              <button
-                onClick={onOpenInvitation}
-                className="btn-royal-secondary"
-                style={{ width: '100%' }}
-                aria-label="View Wedding Invitation"
-              >
-                <KalashMotif className="w-5 h-5" color="var(--color-gold-700)" />
-                View Wedding Invitation
-              </button>
-            </div>
-          </div>
-
-          {/* Live Countdown Timer with Sideways Reveal */}
-          <div
-            ref={countdownRef}
-            className={`reveal-up delay-200 ${countdownRevealed ? 'is-revealed' : ''}`}
-            style={{ marginTop: '38px' }}
-          >
-            <p
-              className="font-royal"
-              style={{
-                fontSize: '0.78rem',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: 'var(--color-maroon-700)',
-                fontWeight: 700,
-                marginBottom: '14px'
-              }}
-            >
-              {isPast ? "Celebrating the Auspicious Union" : "Auspicious Muhurtham Countdown"}
-            </p>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '10px',
-                maxWidth: '380px',
-                margin: '0 auto'
-              }}
-            >
-              {[
-                { label: 'Days', value: timeLeft.days, direction: 'reveal-left' },
-                { label: 'Hours', value: timeLeft.hours, direction: 'reveal-left' },
-                { label: 'Mins', value: timeLeft.minutes, direction: 'reveal-right' },
-                { label: 'Secs', value: timeLeft.seconds, direction: 'reveal-right' }
-              ].map((unit, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    background: 'var(--gradient-card-dark)',
-                    border: '1.5px solid var(--color-gold-500)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '12px 4px',
-                    boxShadow: 'var(--shadow-md), var(--shadow-gold)'
-                  }}
-                >
-                  <span
-                    className="font-royal"
-                    style={{
-                      display: 'block',
-                      fontSize: 'clamp(1.3rem, 4.5vw, 1.75rem)',
-                      fontWeight: 700,
-                      color: 'var(--color-gold-300)',
-                      lineHeight: 1
-                    }}
-                  >
-                    {String(unit.value).padStart(2, '0')}
-                  </span>
-                  <span
-                    style={{
-                      display: 'block',
-                      fontSize: '0.65rem',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      color: 'var(--color-gold-200)',
-                      marginTop: '6px',
-                      fontWeight: 600,
-                      opacity: 0.85
-                    }}
-                  >
-                    {unit.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+        {/* ── Countdown Timer ── */}
+        <div ref={countdownRef} className={`reveal ${countdownVis ? 'revealed' : ''}`} style={{ textAlign: 'center' }}>
+          <p className="royal" style={{
+            fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: '#A07830', marginBottom: '14px'
+          }}>
+            {time.past ? '✨ Celebrating the Sacred Union ✨' : '⏳ Auspicious Muhurtham Countdown'}
+          </p>
+          <div className="countdown-grid">
+            {[
+              { label: 'Days',  val: time.days },
+              { label: 'Hours', val: time.hours },
+              { label: 'Mins',  val: time.mins },
+              { label: 'Secs',  val: time.secs },
+            ].map(({ label, val }) => (
+              <div key={label} className="countdown-unit">
+                <span className="countdown-num">{String(val).padStart(2, '0')}</span>
+                <span className="countdown-label">{label}</span>
+              </div>
+            ))}
           </div>
         </div>
+
       </div>
     </section>
   );
-};
+}

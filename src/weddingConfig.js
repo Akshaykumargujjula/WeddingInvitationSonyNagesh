@@ -89,15 +89,15 @@ export const weddingConfig = {
   timeline: [
     {
       time: "8:00 AM",
-      title: "Edurukolu & Seemantham Rituals",
-      teluguTitle: "ఎదురుకోలు వేడుక",
-      description: "Welcoming the groom's family with Mangala Harathi and traditional nadaswaram melodies.",
+      title: "Edurukolu & Naandi Rituals",
+      teluguTitle: "ఎదురుకోలు • నాందీ వేడుక",
+      description: "Welcoming the groom's family with Mangala Harathi and traditional nadaswaram melodies. Naandi pooja seeking blessings of ancestors for the auspicious occasion.",
       icon: "🪔"
     },
     {
       time: "9:31 AM",
       title: "Subha Muhurtham & Talambralu",
-      teluguTitle: "ధనుర్ లగ్న సుముహూర్తము & జీలకర్ర-బెల్లం",
+      teluguTitle: "ధనుర్ లగ్న సుముహూర్తము • జీలకర్ర-బెల్లం",
       description: "Jeelakarra Bellam Dharana, Mangalasutra Dharana, and joyous Talambralu in auspicious Dhanur Lagnam.",
       highlight: true,
       icon: "💍"
@@ -106,15 +106,8 @@ export const weddingConfig = {
       time: "12:00 PM",
       title: "Kalyana Bhojanam",
       teluguTitle: "కళ్యాణ విందు భోజనం",
-      description: "Delectable traditional Telugu wedding feast served on auspicious banana leaves.",
+      description: "Delectable traditional Telugu wedding feast served on auspicious banana leaves with family and friends.",
       icon: "🍽️"
-    },
-    {
-      time: "7:00 PM Onwards",
-      title: "Evening Reception & Celebrations",
-      teluguTitle: "రిసెప్షన్ వేడుక",
-      description: "An evening of music, warm blessings, photography, and celebration with family & friends.",
-      icon: "✨"
     }
   ],
 
