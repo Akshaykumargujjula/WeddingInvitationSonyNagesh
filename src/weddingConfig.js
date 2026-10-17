@@ -75,7 +75,7 @@ export const weddingConfig = {
   // Set trackUrl to your audio file path when ready (e.g. "/audio/my-song.mp3")
   // Leave empty ("") to hide the music button entirely
   audio: {
-    trackUrl: "",
+    trackUrl: "/audio/wedding-music.mp3",
     trackTitle: "Wedding Music",
     trackSubtitle: "Traditional Kalyana Vaibhogam",
     autoPrompt: false
